@@ -5,7 +5,6 @@ import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 import info.agrueneberg.fhir.exceptions.DeletedException;
 import info.agrueneberg.fhir.exceptions.IllegalTypeException;
 import info.agrueneberg.fhir.exceptions.NotFoundException;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,10 +22,9 @@ public class ResourceService {
     private final DBCollection versionsCollection;
 
     @Autowired
-    public ResourceService(Mongo mongo) {
-        DB db = mongo.getDB("fhir");
-        this.resourcesCollection = db.getCollection("resources");
-        this.versionsCollection = db.getCollection("versions");
+    public ResourceService(MongoTemplate mongoTemplate) {
+        this.resourcesCollection = mongoTemplate.getCollection("resources");
+        this.versionsCollection = mongoTemplate.getCollection("versions");
     }
 
     public DBObject read(String type, String lid) throws NotFoundException, DeletedException, IllegalTypeException {
