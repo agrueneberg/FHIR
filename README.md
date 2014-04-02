@@ -1,6 +1,12 @@
 FHIR
 ====
 
+Status
+------
+
+Incomplete and experimental.
+
+
 Getting Started
 ---------------
 
