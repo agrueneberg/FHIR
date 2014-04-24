@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +20,11 @@ public class ExceptionController {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handle404(Exception ex) {
         return new ResponseEntity<String>("Not Found", HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<String> handle406(Exception ex) {
+        return new ResponseEntity<String>("Not Acceptable", HttpStatus.NOT_ACCEPTABLE);
     }
 
     @ExceptionHandler(DeletedException.class)
