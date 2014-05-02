@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ResponseBody
 public class ExceptionController {
 
-    private static Logger logger = LoggerFactory.getLogger(ExceptionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<String> handle404(Exception ex) {
