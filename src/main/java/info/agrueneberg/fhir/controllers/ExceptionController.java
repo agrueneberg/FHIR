@@ -34,7 +34,7 @@ public class ExceptionController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<String> handle500(Exception ex) {
-        logger.error(ex.getMessage());
+        logger.error(ex.getClass().getSimpleName() + ": " + ex.getMessage());
         return new ResponseEntity<String>("Internal Server Error", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
