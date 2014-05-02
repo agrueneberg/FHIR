@@ -1,5 +1,6 @@
 package info.agrueneberg.fhir.controllers;
 
+import info.agrueneberg.fhir.exceptions.AccessDeniedException;
 import info.agrueneberg.fhir.exceptions.DeletedException;
 import info.agrueneberg.fhir.exceptions.NotFoundException;
 import org.slf4j.Logger;
@@ -21,6 +22,11 @@ public class ExceptionController {
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<String> handle400(Exception ex) {
         return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> handle403(Exception ex) {
+        return new ResponseEntity<String>("Forbidden", HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(NotFoundException.class)
