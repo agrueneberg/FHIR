@@ -5,6 +5,7 @@ import info.agrueneberg.fhir.exceptions.NotFoundException;
 import info.agrueneberg.fhir.models.MetadataResource;
 import info.agrueneberg.fhir.models.User;
 import info.agrueneberg.fhir.services.MetadataService;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +39,11 @@ public class MetadataController {
             throw new AccessDeniedException();
         }
         MetadataResource metadataResource = metadataService.getResource(resourcePath);
-        return metadataResource.getAcls();
+        List<Map<String, String>> acls = metadataResource.getAcls();
+        if (acls == null) {
+            acls = new ArrayList<Map<String, String>>(0);
+        }
+        return acls;
     }
 
     @RequestMapping(value = "/.well-known/governance", method = RequestMethod.PUT, consumes = "application/json")
