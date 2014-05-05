@@ -8,6 +8,7 @@ import info.agrueneberg.fhir.services.MetadataService;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,13 +33,16 @@ public class MetadataController {
 
     @RequestMapping(value = "/.well-known/governance", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, String>> getAcls(@RequestParam(value = "resource") String resourcePath) throws NotFoundException, AccessDeniedException {
+    public List<Map<String, String>> getAcls(@RequestParam(value = "resource") String resourcePath, HttpServletResponse response) throws NotFoundException, AccessDeniedException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         boolean hasAccess = metadataService.hasPermission(resourcePath, user, "govern");
         if (!hasAccess) {
             throw new AccessDeniedException();
         }
         MetadataResource metadataResource = metadataService.getResource(resourcePath);
+        if (metadataResource.getInheritFrom() != null) {
+            response.addHeader("Link", "<" + metadataResource.getInheritFrom() + ">; rel=\"inherit\"");
+        }
         List<Map<String, String>> acls = metadataResource.getAcls();
         if (acls == null) {
             acls = new ArrayList<Map<String, String>>(0);
