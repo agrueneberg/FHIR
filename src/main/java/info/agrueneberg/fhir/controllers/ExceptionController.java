@@ -1,5 +1,6 @@
 package info.agrueneberg.fhir.controllers;
 
+import com.fasterxml.jackson.databind.JsonMappingException;
 import info.agrueneberg.fhir.exceptions.AccessDeniedException;
 import info.agrueneberg.fhir.exceptions.DeletedException;
 import info.agrueneberg.fhir.exceptions.NotFoundException;
@@ -7,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -19,7 +21,7 @@ public class ExceptionController {
 
     private static final Logger logger = LoggerFactory.getLogger(ExceptionController.class);
 
-    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ExceptionHandler({MissingServletRequestParameterException.class, JsonMappingException.class, HttpMessageNotReadableException.class})
     public ResponseEntity<String> handle400(Exception ex) {
         return new ResponseEntity<String>("Bad Request", HttpStatus.BAD_REQUEST);
     }
