@@ -3,7 +3,11 @@
 
     <include resource="org/springframework/boot/logging/logback/base.xml" />
 
-    <!--
+    <!-- Governance debugging
+    <logger name="info.agrueneberg.fhir.services.MetadataService" level="DEBUG" />
+    -->
+
+    <!-- Spring debugging
     <logger name="org.springframework" level="DEBUG" />
     -->
 

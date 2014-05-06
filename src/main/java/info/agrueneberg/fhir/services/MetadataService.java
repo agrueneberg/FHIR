@@ -34,7 +34,9 @@ public class MetadataService {
         metadataRepository.save(resource);
     }
 
-    public boolean hasPermission(String resource, User user, String operator) {        MetadataResource metadataResource;
+    public boolean hasPermission(String resource, User user, String operator) {
+        logger.debug("Get metadata for resource " + resource);
+        MetadataResource metadataResource;
         String originalResource = resource;
         String originalCreator = null;
         Map<String, String> matchingRule = null;
@@ -54,6 +56,7 @@ public class MetadataService {
                 for (Map<String, String> rule : metadataResource.getAcls()) {
                     if (rule.get("operator").equals(operator) && ((rule.containsKey("username") && rule.get("username").equals(user.getUsername())) || (rule.containsKey("role") && rule.get("role").equals("authenticated")))) {
                         matchingRule = rule;
+                        logger.debug("Found matching rule: " + matchingRule + " (original creator: " + originalCreator + ")");
                         break L;
                     }
                 }
@@ -65,6 +68,7 @@ public class MetadataService {
                 return false;
             }
             resource = metadataResource.getInheritFrom();
+            logger.debug("Follow inheritance chain to resource " + resource);
         }
         if (matchingRule.get("state").equals("all") || (matchingRule.get("state").equals("self") && originalCreator.equals(user.getUsername()))) {
             return true;
