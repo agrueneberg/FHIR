@@ -23,8 +23,8 @@ public class ResourceRepository {
 
     @Autowired
     public ResourceRepository(MongoTemplate mongoTemplate) {
-        this.resourcesCollection = mongoTemplate.getCollection("resources");
-        this.versionsCollection = mongoTemplate.getCollection("versions");
+        resourcesCollection = mongoTemplate.getCollection("resources");
+        versionsCollection = mongoTemplate.getCollection("versions");
     }
 
     public Map<String, Object> read(String type, String lid) throws NotFoundException, DeletedException, IllegalTypeException {
@@ -81,6 +81,7 @@ public class ResourceRepository {
         doc.put("_lid", lid);
         // Find previous doc
         DBObject query = new BasicDBObject();
+        query.put("_type", type);
         query.put("_lid", lid);
         DBObject previousDoc = resourcesCollection.findOne(query);
         if (previousDoc == null) {
@@ -96,6 +97,7 @@ public class ResourceRepository {
 
     public void delete(String type, String lid) throws NotFoundException, IllegalTypeException {
         DBObject query = new BasicDBObject();
+        query.put("_type", type);
         query.put("_lid", lid);
         DBObject orderBy = new BasicDBObject();
         orderBy.put("_vid", -1);
