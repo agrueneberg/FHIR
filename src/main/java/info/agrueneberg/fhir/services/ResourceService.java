@@ -4,6 +4,7 @@ import info.agrueneberg.fhir.exceptions.DeletedException;
 import info.agrueneberg.fhir.exceptions.IllegalTypeException;
 import info.agrueneberg.fhir.exceptions.NotFoundException;
 import info.agrueneberg.fhir.repositories.ResourceRepository;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,11 @@ public class ResourceService {
     }
 
     public List<Map<String, Object>> search() {
-        return resourceRepository.search();
+        return resourceRepository.search(null, new HashMap<String, String[]>());
     }
 
-    public List<Map<String, Object>> search(String type) {
-        return resourceRepository.search(type);
+    public List<Map<String, Object>> search(String type, Map<String, String[]> parameters) {
+        return resourceRepository.search(type, parameters);
     }
 
     public List<Map<String, Object>> history() {

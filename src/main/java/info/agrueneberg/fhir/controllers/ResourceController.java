@@ -8,9 +8,7 @@ import info.agrueneberg.fhir.models.MetadataResource;
 import info.agrueneberg.fhir.models.User;
 import info.agrueneberg.fhir.services.MetadataService;
 import info.agrueneberg.fhir.services.ResourceService;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
@@ -91,7 +89,8 @@ public class ResourceController {
         if (!hasAccess) {
             throw new AccessDeniedException();
         }
-        List<Map<String, Object>> resources = resourceService.search(type);
+        Map<String, String[]> parameters = request.getParameterMap();
+        List<Map<String, Object>> resources = resourceService.search(type, parameters);
         Iterator<Map<String, Object>> itr = resources.iterator();
         while (itr.hasNext()) {
             Map<String, Object> embeddedResource = itr.next();
@@ -121,16 +120,17 @@ public class ResourceController {
         response.addHeader("Location", "/" + type + "/" + lid + "/_history/1");
     }
 
-    @RequestMapping(value = "/{type}/_search", method = {RequestMethod.GET, RequestMethod.POST})
+    @RequestMapping(value = "/{type}/_search", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
-    public List<Map<String, Object>> searchForTypeExplicit(@PathVariable String type) throws AccessDeniedException {
+    public List<Map<String, Object>> searchForTypeExplicit(@PathVariable String type, HttpServletRequest request) throws AccessDeniedException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String resourcePath = "/" + type;
         boolean hasAccess = metadataService.hasPermission(resourcePath, user, "list");
         if (!hasAccess) {
             throw new AccessDeniedException();
         }
-        List<Map<String, Object>> resources = resourceService.search(type);
+        Map<String, String[]> parameters = request.getParameterMap();
+        List<Map<String, Object>> resources = resourceService.search(type, parameters);
         Iterator<Map<String, Object>> itr = resources.iterator();
         while (itr.hasNext()) {
             Map<String, Object> embeddedResource = itr.next();

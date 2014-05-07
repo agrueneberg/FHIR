@@ -113,24 +113,14 @@ public class ResourceRepository {
         }
     }
 
-    public List<Map<String, Object>> search() {
-        DBCursor cursor = resourcesCollection.find();
-        List<Map<String, Object>> docs = new ArrayList<Map<String, Object>>(cursor.count());
-        try {
-            while(cursor.hasNext()) {
-                DBObject doc = cursor.next();
-                doc.removeField("_id");
-                docs.add(doc.toMap());
-            }
-        } finally {
-            cursor.close();
-        }
-        return docs;
-    }
-
-    public List<Map<String, Object>> search(String type) {
+    public List<Map<String, Object>> search(String type, Map<String, String[]> parameters) {
         DBObject query = new BasicDBObject();
-        query.put("_type", type);
+        if (type != null) {
+            query.put("_type", type);
+        }
+        for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
+            query.put(entry.getKey(), entry.getValue()[0]);
+        }
         DBCursor cursor = resourcesCollection.find(query);
         List<Map<String, Object>> docs = new ArrayList<Map<String, Object>>(cursor.count());
         try {
