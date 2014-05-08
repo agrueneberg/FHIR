@@ -42,7 +42,7 @@ public class ResourceController {
     @ResponseStatus(HttpStatus.OK)
     public List<Map<String, Object>> search(HttpServletRequest request) throws AccessDeniedException {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        boolean hasAccess = metadataService.hasPermission(request.getServletPath(), user, "history");
+        boolean hasAccess = metadataService.hasPermission(request.getServletPath(), user, "list");
         if (!hasAccess) {
             throw new AccessDeniedException();
         }
