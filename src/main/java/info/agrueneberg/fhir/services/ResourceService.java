@@ -40,8 +40,8 @@ public class ResourceService {
         resourceRepository.delete(type, lid);
     }
 
-    public List<Map<String, Object>> search() {
-        return resourceRepository.search(null, new HashMap<String, String[]>());
+    public List<Map<String, Object>> search(Map<String, String[]> parameters) {
+        return resourceRepository.search(null, parameters);
     }
 
     public List<Map<String, Object>> search(String type, Map<String, String[]> parameters) {

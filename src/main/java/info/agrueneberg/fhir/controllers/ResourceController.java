@@ -46,7 +46,8 @@ public class ResourceController {
         if (!hasAccess) {
             throw new AccessDeniedException();
         }
-        List<Map<String, Object>> resources = resourceService.search();
+        Map<String, String[]> parameters = request.getParameterMap();
+        List<Map<String, Object>> resources = resourceService.search(parameters);
         Iterator<Map<String, Object>> itr = resources.iterator();
         while (itr.hasNext()) {
             Map<String, Object> embeddedResource = itr.next();
